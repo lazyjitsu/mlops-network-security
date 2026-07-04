@@ -1,6 +1,6 @@
 from networksecurity.exception.exception import NetworkSecurityException
 from networksecurity.logging.logger import logging
-
+# from networksecurity.constant.training_pipeline import SCHEMA_FILE_PATH
 ## configuration of the Data Ingestion Config 
 
 from networksecurity.entity.config_entity import DataIngestionConfig
@@ -67,18 +67,18 @@ class DataIngestion:
                 "Exited split_data_as_train_test method of Data_Ingestion class"
             )
             
-            dir_path = os.path.dirname(self.data_ingestion_config.training_file_path)
+            dir_path = os.path.dirname(self.data_ingestion_config.trained_file_path)
             
             os.makedirs(dir_path, exist_ok=True)
             
             logging.info(f"Exporting train and test file path.")
             
             train_set.to_csv(
-                self.data_ingestion_config.training_file_path, index=False, header=True
+                self.data_ingestion_config.trained_file_path, index=False, header=True
             )
 
             test_set.to_csv(
-                self.data_ingestion_config.testing_file_path, index=False, header=True
+                self.data_ingestion_config.test_file_path, index=False, header=True
             )
             logging.info(f"Exported train and test file path.")
 
@@ -91,8 +91,8 @@ class DataIngestion:
             dataframe=self.export_collection_as_dataframe()
             dataframe=self.export_data_into_feature_store(dataframe)
             self.split_data_as_train_test(dataframe)
-            dataingestionartifact=DataIngestionArtifact(trained_file_path=self.data_ingestion_config.training_file_path,
-                                                        test_file_path=self.data_ingestion_config.testing_file_path)
+            dataingestionartifact=DataIngestionArtifact(trained_file_path = self.data_ingestion_config.trained_file_path,
+                                                        test_file_path    =  self.data_ingestion_config.test_file_path)
             return dataingestionartifact
         except Exception as e:
             raise NetworkSecurityException(e,sys)
